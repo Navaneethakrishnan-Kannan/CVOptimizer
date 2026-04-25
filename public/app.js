@@ -21,13 +21,15 @@ const els = {
   afterText: document.getElementById('afterText'),
   optimizedScoreWrap: document.getElementById('optimizedScoreWrap'),
   optimizedTotalScore: document.getElementById('optimizedTotalScore'),
-  optimizedScoreBar: document.getElementById('optimizedScoreBar')
+  optimizedScoreBar: document.getElementById('optimizedScoreBar'),
+  targetScoreNote: document.getElementById('targetScoreNote')
 }
 
 let groqConfigured = false
 let state = {
   resumeText: '',
   resumeJson: null,
+  originalPdfBase64: '',
   jdText: '',
   atsType: '',
   scoreData: null,
@@ -134,8 +136,10 @@ async function analyze() {
   if (file) {
     const base64 = await readFileAsBase64(file)
     parsePayload = { file: { name: file.name, mimeType: file.type, base64 } }
+    state.originalPdfBase64 = (String(file.type || '').includes('pdf') || String(file.name || '').toLowerCase().endsWith('.pdf')) ? base64 : ''
   } else {
     parsePayload = { text: resumePaste }
+    state.originalPdfBase64 = ''
   }
 
   const parseRes = await fetch('/.netlify/functions/parseResume', {
@@ -183,6 +187,7 @@ async function analyze() {
   renderMissing(els.missingSkills, state.scoreData.missingSkills, [])
   renderMissing(els.missingKeywords, state.scoreData.missingKeywords, [])
   els.optimizedScoreWrap.classList.add('hidden')
+  els.targetScoreNote.textContent = ''
 
   setButtonsEnabled(true)
   els.optimizeBtn.disabled = !groqConfigured
@@ -211,6 +216,12 @@ async function optimize() {
   state.optimizedText = data.optimizedText
   state.addressedSkills = data.addressedSkills || []
   state.addressedKeywords = data.addressedKeywords || []
+  if (data.targetedScore && typeof data.targetedScore.totalScore === 'number') {
+    const s = data.targetedScore.totalScore
+    els.targetScoreNote.textContent = `Optimizer target score (internal rubric): ${s.toFixed(1)}%`
+  } else {
+    els.targetScoreNote.textContent = ''
+  }
 
   els.afterText.textContent = state.optimizedText
   renderMissing(els.missingSkills, state.scoreData.missingSkills, state.addressedSkills)
@@ -264,6 +275,34 @@ async function downloadDocx() {
 
 function downloadPdf() {
   const text = state.optimizedText || state.resumeText || ''
+  const name = state.optimizedText ? 'optimized_resume' : 'resume'
+  // If user uploaded a PDF, produce an "edited" PDF by appending optimized text to the original PDF server-side.
+  if (state.originalPdfBase64) {
+    fetch('/.netlify/functions/exportPdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ originalPdfBase64: state.originalPdfBase64, text, filename: name })
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data.error || 'Failed to export edited PDF')
+        }
+        return res.blob()
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${name}.pdf`
+        a.click()
+        URL.revokeObjectURL(url)
+      })
+      .catch((e) => alert(e.message || String(e)))
+    return
+  }
+
+  // Otherwise, fall back to client-side PDF generation.
   const { jsPDF } = window.jspdf
   const pdf = new jsPDF()
   const marginX = 12
@@ -280,7 +319,7 @@ function downloadPdf() {
     pdf.text(line, marginX, y)
     y += 6
   }
-  pdf.save(state.optimizedText ? 'optimized_resume.pdf' : 'resume.pdf')
+  pdf.save(`${name}.pdf`)
 }
 
 function reset() {
@@ -296,6 +335,7 @@ function reset() {
   els.beforeText.textContent = ''
   els.afterText.textContent = ''
   els.optimizedScoreWrap.classList.add('hidden')
+  els.targetScoreNote.textContent = ''
   setButtonsEnabled(false)
   els.optimizeBtn.disabled = !groqConfigured
   setStatus('')
@@ -333,4 +373,3 @@ els.resetBtn.addEventListener('click', () => reset())
 
 Promise.allSettled([loadProfiles(), loadConfig()]).catch(() => {})
 reset()
-

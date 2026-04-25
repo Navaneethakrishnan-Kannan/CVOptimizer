@@ -25,6 +25,17 @@ exports.handler = async (event, context) => {
       if (isPdf) {
         const data = await pdfParse(buffer)
         resumeText = data.text
+        const normalized = String(resumeText || '').replace(/\s+/g, ' ').trim()
+        // Heuristic: scanned/image PDFs often extract near-empty text via pdf-parse.
+        if (normalized.length < 200) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({
+              error: 'PDF text extraction returned too little text. This PDF may be scanned or image-based. Please upload a DOCX/TXT or paste your resume text for best results.'
+            })
+          }
+        }
       } else if (isDocx) {
         const result = await mammoth.extractRawText({ buffer })
         resumeText = result.value

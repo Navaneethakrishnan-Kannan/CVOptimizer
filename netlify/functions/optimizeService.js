@@ -13,7 +13,7 @@ async function getGroqClient() {
 
 const MODEL_REQUEST_TOKEN_LIMIT = 8000
 const REQUEST_SAFETY_GAP_TOKENS = 2000
-const MAX_COMPLETION_TOKENS = 1500
+const MAX_COMPLETION_TOKENS = 1200
 const MAX_PROMPT_TOKENS = MODEL_REQUEST_TOKEN_LIMIT - REQUEST_SAFETY_GAP_TOKENS - MAX_COMPLETION_TOKENS
 
 function estimateTokens(text) {
@@ -49,7 +49,9 @@ Goal: rewrite the resume to better match the job description for the ${atsType} 
 Rules:
 - Preserve truth. Do not invent employers, titles, dates, degrees, certifications, or projects.
 - Keep a single-column, plain-text resume. No tables. No graphics.
-- Incorporate missing skills/keywords only if credible; if not, add them in a Skills section as "Familiar with".
+- Ensure ALL provided missing skills/keywords appear verbatim somewhere in the resume text.
+- If you cannot credibly place a skill/keyword inside Experience bullets, include it under Skills as "Familiar with: <term>".
+- For Cornerstone: put skill terms inside Experience bullets where possible to help context-based matching.
 
 Job Description:
 {{JD_TEXT}}
