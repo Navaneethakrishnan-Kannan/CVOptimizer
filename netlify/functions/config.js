@@ -16,9 +16,8 @@ exports.handler = async (event) => {
     headers: corsHeaders,
     body: JSON.stringify({
       groqConfigured: Boolean(process.env.GROQ_API_KEY),
-      model,
+      groqModelConfigured: Boolean(process.env.GROQ_MODEL),
       defaultModel
     })
   }
 }
-

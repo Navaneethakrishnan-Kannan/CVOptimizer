@@ -1,5 +1,3 @@
-const { normalizeText, tokenize } = require('./textUtils.js')
-
 async function getGroqClient() {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
@@ -13,7 +11,7 @@ async function getGroqClient() {
   return new Groq({ apiKey })
 }
 
-async function optimizeResume(cvText, jdText, atsType, missingSkills = [], missingKeywords = []) {
+async function optimizeResume({ cvText, jdText, atsType, missingSkills = [], missingKeywords = [] }) {
   const model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b'
 
   const prompt =
@@ -49,19 +47,8 @@ Return ONLY the optimized resume in plain text.`
   const optimizedText = completion?.choices?.[0]?.message?.content || ''
   if (!optimizedText) throw new Error('Groq API returned empty response')
 
-  const normalizedOptimized = normalizeText(optimizedText)
-
-  const addressedSkills = (missingSkills || []).filter((skill) => normalizedOptimized.includes(normalizeText(skill)))
-  const addressedKeywords = (missingKeywords || []).filter((kw) => {
-    const normalizedKw = normalizeText(kw)
-    if (!normalizedKw) return false
-    if (String(atsType || '').toLowerCase() === 'taleo') {
-      return tokenize(normalizedOptimized).includes(normalizedKw)
-    }
-    return normalizedOptimized.includes(normalizedKw)
-  })
-
-  return { optimizedText, addressedSkills, addressedKeywords }
+  return { optimizedText }
 }
 
 module.exports = { optimizeResume }
+

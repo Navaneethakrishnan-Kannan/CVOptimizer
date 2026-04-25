@@ -2,7 +2,7 @@ const { normalizeText, unique } = require('./textUtils.js')
 
 const skillPatterns = [
   /\b(?:JavaScript|Python|React|Node\.js|SQL|AWS|Docker|Kubernetes|PMP|CCNA)\b/gi,
-  /\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\b/g // short capitalized phrases
+  /\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,3}\b/g
 ]
 
 const certPatterns = /\b(?:aws|microsoft|pmp|ccna|cissp|itil)\b/i

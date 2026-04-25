@@ -1,5 +1,6 @@
 .netlify
 node_modules
+.npm-cache
 .env
 .env.*
 !.env.example
@@ -10,4 +11,3 @@ yarn-error.log*
 
 .DS_Store
 Thumbs.db
-

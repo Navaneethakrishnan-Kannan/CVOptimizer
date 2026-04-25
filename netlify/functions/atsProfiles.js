@@ -1,4 +1,4 @@
-const { atsProfiles, supportedAts } = require('../config/atsProfiles.js')
+const { atsProfiles, supportedAts } = require('./lib/atsProfilesConfig.js')
 
 exports.handler = async (event) => {
   const corsHeaders = {
@@ -21,4 +21,3 @@ exports.handler = async (event) => {
     body: JSON.stringify({ supportedAts: list })
   }
 }
-

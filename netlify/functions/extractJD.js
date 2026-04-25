@@ -1,5 +1,5 @@
-const { extractJDAnalysis } = require('../utils/jdEngine.js')
-const { atsProfiles } = require('../config/atsProfiles.js')
+const { extractJDAnalysis } = require('./lib/jdEngine.js')
+const { atsProfiles } = require('./lib/atsProfilesConfig.js')
 
 exports.handler = async (event, context) => {
   const corsHeaders = {
