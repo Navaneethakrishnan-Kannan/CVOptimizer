@@ -1,15 +1,19 @@
 const { normalizeText, tokenize } = require('./textUtils.js')
 
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
-
-async function optimizeResume(cvText, jdText, atsType, missingSkills = [], missingKeywords = []) {
+async function getGroqClient() {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
-    const error = new Error('Missing GROQ_API_KEY. Set it in Netlify Site settings -> Environment variables (and in local `.env` for `netlify dev`).')
+    const error = new Error('Missing GROQ_API_KEY. Set it in Netlify Site settings -> Environment variables.')
     error.statusCode = 400
     throw error
   }
 
+  const mod = await import('groq-sdk')
+  const Groq = mod.default || mod.Groq || mod
+  return new Groq({ apiKey })
+}
+
+async function optimizeResume(cvText, jdText, atsType, missingSkills = [], missingKeywords = []) {
   const model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b'
 
   const prompt =
@@ -34,27 +38,15 @@ ${(missingKeywords || []).join(', ')}
 
 Return ONLY the optimized resume in plain text.`
 
-  const response = await fetch(GROQ_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 2000,
-      temperature: 0.2
-    })
+  const groq = await getGroqClient()
+  const completion = await groq.chat.completions.create({
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: 2000,
+    temperature: 0.2
   })
 
-  if (!response.ok) {
-    const body = await response.text().catch(() => '')
-    throw new Error(`Groq API error (${response.status}): ${body || response.statusText}`)
-  }
-
-  const data = await response.json()
-  const optimizedText = data?.choices?.[0]?.message?.content || ''
+  const optimizedText = completion?.choices?.[0]?.message?.content || ''
   if (!optimizedText) throw new Error('Groq API returned empty response')
 
   const normalizedOptimized = normalizeText(optimizedText)
@@ -73,4 +65,3 @@ Return ONLY the optimized resume in plain text.`
 }
 
 module.exports = { optimizeResume }
-

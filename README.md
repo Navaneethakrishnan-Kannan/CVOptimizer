@@ -12,7 +12,6 @@ A simple (no React build step) Netlify-hosted site that parses a resume, extract
 
 1. Push to GitHub and connect the repo to Netlify
 2. In Netlify: Site settings -> Environment variables
-   - `GROQ_API_KEY` (required for optimization)
-   - `GROQ_MODEL` (optional)
+   - `GROQ_API_KEY` (required for optimization; can be marked as a secret value)
+   - `GROQ_MODEL` (optional; can be marked as a secret value)
 3. Deploy
-
