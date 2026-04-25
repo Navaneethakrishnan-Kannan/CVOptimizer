@@ -1,4 +1,4 @@
-const { atsProfiles, supportedAts } = require('./lib/atsProfilesConfig.js')
+const { atsProfiles, supportedAts } = require('./atsProfilesConfig.js')
 
 exports.handler = async (event) => {
   const corsHeaders = {

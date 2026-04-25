@@ -1,5 +1,5 @@
-const { optimizeResume } = require('./lib/optimizeService.js')
-const { normalizeText, tokenize } = require('./lib/textUtils.js')
+const { optimizeResume } = require('./optimizeService.js')
+const { normalizeText, tokenize } = require('./textUtils.js')
 
 exports.handler = async (event, context) => {
   const corsHeaders = {

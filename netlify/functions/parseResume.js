@@ -1,6 +1,6 @@
 const pdfParse = require('pdf-parse')
 const mammoth = require('mammoth')
-const { extractSkills } = require('./lib/skillsEngine.js')
+const { extractSkills } = require('./skillsEngine.js')
 
 exports.handler = async (event, context) => {
   const corsHeaders = {

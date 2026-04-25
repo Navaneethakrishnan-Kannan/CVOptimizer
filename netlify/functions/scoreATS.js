@@ -1,6 +1,6 @@
-const { scoreATS } = require('./lib/scoringEngine.js')
-const { atsProfiles } = require('./lib/atsProfilesConfig.js')
-const { extractJDAnalysis } = require('./lib/jdEngine.js')
+const { scoreATS } = require('./scoringEngine.js')
+const { atsProfiles } = require('./atsProfilesConfig.js')
+const { extractJDAnalysis } = require('./jdEngine.js')
 
 exports.handler = async (event, context) => {
   const corsHeaders = {
