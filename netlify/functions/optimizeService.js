@@ -12,7 +12,7 @@ async function getGroqClient() {
 }
 
 async function optimizeResume({ cvText, jdText, atsType, missingSkills = [], missingKeywords = [] }) {
-  const model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b'
+  const model = 'openai/gpt-oss-20b'
 
   const prompt =
 `You are an ATS resume optimizer.
