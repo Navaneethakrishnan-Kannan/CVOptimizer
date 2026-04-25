@@ -47,3 +47,4 @@ function groupSkills(skills) {
 }
 
 module.exports = { extractSkills, normalizeSkills, groupSkills }
+

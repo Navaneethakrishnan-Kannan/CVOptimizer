@@ -1,4 +1,4 @@
-const { normalizeText, tokenize, unique } = require('./textUtils.js')
+const { tokenize, unique } = require('./textUtils.js')
 const { extractSkills, normalizeSkills } = require('./skillsEngine.js')
 
 const STOPWORDS = new Set([
@@ -32,3 +32,4 @@ function extractJDAnalysis(jdText, synonyms = {}) {
 }
 
 module.exports = { extractJDAnalysis, extractKeywords, extractExperienceYears }
+

@@ -1,27 +1,18 @@
 # ATS Resume Optimizer
 
-A web application to optimize resumes for ATS platforms using Groq AI.
+A simple (no React build step) Netlify-hosted site that parses a resume, extracts JD keywords, scores against ATS profiles, and optionally optimizes the resume using Groq.
 
-## Setup
+## Local dev
 
-1. Clone the repo
+1. Install dependencies: `npm install`
+2. Create `.env` from `.env.example` (local dev only)
+3. Run: `npx netlify dev`
 
-2. Install dependencies: `npm install`
+## Netlify deployment
 
-3. Create `.env` from `.env.example` and set `GROQ_API_KEY` (local dev only)
-
-4. For local dev: `npx netlify dev`
-
-4. Set environment variables in .env: GROQ_API_KEY
-
-## Deployment
-
-1. Push to GitHub
-
-2. Connect to Netlify
-
-3. In Netlify: Site settings → Environment variables:
+1. Push to GitHub and connect the repo to Netlify
+2. In Netlify: Site settings -> Environment variables
    - `GROQ_API_KEY` (required for optimization)
    - `GROQ_MODEL` (optional)
+3. Deploy
 
-4. Deploy

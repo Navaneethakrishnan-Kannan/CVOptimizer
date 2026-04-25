@@ -5,7 +5,7 @@ const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
 async function optimizeResume(cvText, jdText, atsType, missingSkills = [], missingKeywords = []) {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
-    const error = new Error('Missing GROQ_API_KEY. Set it in Netlify Site settings → Environment variables (and in local `.env` for `netlify dev`).')
+    const error = new Error('Missing GROQ_API_KEY. Set it in Netlify Site settings -> Environment variables (and in local `.env` for `netlify dev`).')
     error.statusCode = 400
     throw error
   }
@@ -73,3 +73,4 @@ Return ONLY the optimized resume in plain text.`
 }
 
 module.exports = { optimizeResume }
+

@@ -1,4 +1,4 @@
-export const atsProfiles = {
+const atsProfiles = {
   cornerstone: {
     displayName: 'Cornerstone',
     weights: {
@@ -58,9 +58,7 @@ export const atsProfiles = {
         preferredFileTypes: ['pdf', 'docx']
       }
     },
-    synonyms: {
-      // add as needed
-    }
+    synonyms: {}
   },
   taleo: {
     displayName: 'Taleo',
@@ -89,10 +87,11 @@ export const atsProfiles = {
         preferredFileTypes: ['txt', 'docx']
       }
     },
-    synonyms: {
-      // add as needed
-    }
+    synonyms: {}
   }
 }
 
-export const supportedAts = Object.keys(atsProfiles)
+const supportedAts = Object.keys(atsProfiles)
+
+module.exports = { atsProfiles, supportedAts }
+

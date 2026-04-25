@@ -52,7 +52,7 @@ function scoreATS({ resumeText, resumeJson, jdAnalysis, atsProfile }) {
   const maxBulletChar = expectations?.formatRules?.maxBulletChar || 180
   const longBullets = resumeText
     .split('\n')
-    .filter((line) => /^\s*[-*•]/.test(line) && line.length > maxBulletChar).length
+    .filter((line) => /^\s*[-*\u2022]/.test(line) && line.length > maxBulletChar).length
   formattingScore -= longBullets * 5
   breakdown.formatting = Math.max(formattingScore, 0)
 
@@ -87,3 +87,4 @@ function scoreATS({ resumeText, resumeJson, jdAnalysis, atsProfile }) {
 }
 
 module.exports = { scoreATS }
+

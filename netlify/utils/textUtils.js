@@ -15,3 +15,4 @@ function unique(items) {
 }
 
 module.exports = { normalizeText, tokenize, unique }
+

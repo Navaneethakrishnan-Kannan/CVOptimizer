@@ -1,4 +1,4 @@
-const { optimizeResume } = require('../../utils/llmService.js')
+const { optimizeResume } = require('../utils/llmService.js')
 
 exports.handler = async (event, context) => {
   const corsHeaders = {
