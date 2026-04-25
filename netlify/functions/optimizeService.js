@@ -25,6 +25,7 @@ Rules:
 Job Description:
 ${jdText}
 
+
 Original Resume:
 ${cvText}
 
